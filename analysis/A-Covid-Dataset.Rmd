@@ -1,0 +1,32 @@
+---
+title: "A Covid Dataset"
+author: "masterStormtrooper"
+date: "2021-06-22"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(Seurat)
+library(rhdf5)
+library(Matrix)
+library(fastTopics)
+library(ggplot2)
+library(cowplot)
+set.seed(1)
+```
+
+The data is associated with this covid 19 paper https://www.nature.com/articles/s41591-020-0901-9. The data consists of several different cellranger filtered bc matrices. In the paper, the author integrated them using Seurat(and probably did some other transformations).
+fastTopic is fitted on GSM4339769_C141_filtered_feature_bc_matrix with 6 topics. The structured plot has an unusual sort of 'uniform' region.
+```{r}
+a = Read10X_h5('data/GSM4339769_C141_filtered_feature_bc_matrix.h5')
+fit = fit_topic_model(a,k = 6)
+topic_colors = c("skyblue","forestgreen","darkmagenta","dodgerblue",
+                  "gold","darkorange")
+structure_plot(fit,colors = topic_colors,topics = 1:6)
+```
